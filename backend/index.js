@@ -8,7 +8,9 @@ import messagesRouter from './routes/messages.js'
 
 dotenv.config()
 const app = express()
-app.use(cors())
+app.use(cors({
+	origin: 'https://pranamika1234.github.io'
+}))
 app.use(express.json())
 
 
