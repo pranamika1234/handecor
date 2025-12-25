@@ -19,6 +19,10 @@ app.use('/api/products', productsRouter)
 app.use('/api/messages', messagesRouter)
 
 
+// Root route for health check or friendly message
+app.get('/', (req, res) => {
+	res.send('API is running!');
+});
 // Connect to MongoDB with better error handling
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/cartzio-handmade'
 
