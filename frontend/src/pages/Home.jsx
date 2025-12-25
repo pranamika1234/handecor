@@ -26,7 +26,7 @@ return (
 {/* Hero Section */}
 <section 
 className="relative -mx-4 -mt-8 mb-12 h-[500px] bg-cover bg-center bg-no-repeat flex items-center justify-center"
-style={{ backgroundImage: "url('/authentic-handmade-products.jpg')" }}
+style={{ backgroundImage: `url('${import.meta.env.BASE_URL}authentic-handmade-products.jpg')` }}
 >
 <div className="absolute inset-0 bg-black/40"></div>
 <div className="relative z-10 text-center text-white px-4 max-w-4xl">

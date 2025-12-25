@@ -7,7 +7,7 @@ return (
 <header className="bg-white border-b">
 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
 <Link to="/" className="flex items-center gap-3">
-<img src="/placeholder.jpg" alt="logo" className="w-10 h-10 rounded-md object-cover" />
+<img src={`${import.meta.env.BASE_URL}placeholder.jpg`} alt="logo" className="w-10 h-10 rounded-md object-cover" />
 <div>
 <div className="font-bold text-lg">Handmade Studio</div>
 <div className="text-xs text-gray-500">Crafts & Gifts</div>
