@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { fetchProducts } from '../api'
 import ProductCard from '../components/Productcard'
-import { FixedSizeGrid as Grid } from 'react-window'
+import { List } from 'react-window'
 
 
 export default function Shop() {
@@ -76,55 +76,64 @@ return (
 
 // Virtualized grid component
 function VirtualizedProductGrid({ products }) {
-	// Responsive columns: 1 (xs), 2 (sm), 3 (lg), 4 (xl)
-	const gridRef = useRef(null);
-	const [columns, setColumns] = useState(1);
-	const [width, setWidth] = useState(400);
+	const containerRef = useRef(null)
+	const [columns, setColumns] = useState(1)
+	const [width, setWidth] = useState(400)
 
 	useEffect(() => {
 		function handleResize() {
-			if (!gridRef.current) return;
-			const w = gridRef.current.offsetWidth;
-			setWidth(w);
-			if (w >= 1280) setColumns(4);
-			else if (w >= 1024) setColumns(3);
-			else if (w >= 640) setColumns(2);
-			else setColumns(1);
+			const node = containerRef.current
+			const measuredWidth = node?.offsetWidth || window.innerWidth || 400
+			setWidth(measuredWidth)
+			if (measuredWidth >= 1280) setColumns(4)
+			else if (measuredWidth >= 1024) setColumns(3)
+			else if (measuredWidth >= 640) setColumns(2)
+			else setColumns(1)
 		}
-		handleResize();
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
+		handleResize()
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
 
-	const rowCount = Math.ceil(products.length / columns);
-	const CARD_HEIGHT = 370; // px, adjust as needed
-	const CARD_WIDTH = width / columns;
+	const rowCount = Math.ceil(products.length / columns)
+	const CARD_HEIGHT = 370
+	const ROW_GAP = 24
+	const listHeight = Math.min(rowCount * (CARD_HEIGHT + ROW_GAP), 1200)
 
 	return (
-		<div ref={gridRef} style={{ width: '100%', height: `${Math.min(rowCount * CARD_HEIGHT, 1200)}px` }}>
-			<Grid
-				columnCount={columns}
-				columnWidth={CARD_WIDTH}
-				height={Math.min(rowCount * CARD_HEIGHT, 1200)}
-				rowCount={rowCount}
-				rowHeight={CARD_HEIGHT}
+		<div ref={containerRef} style={{ width: '100%' }}>
+			<List
+				height={listHeight}
+				itemCount={rowCount}
+				itemSize={CARD_HEIGHT + ROW_GAP}
 				width={width}
-				itemData={{ products, columns }}
+				itemData={{ products, columns, gap: ROW_GAP }}
 			>
-				{ProductCell}
-			</Grid>
+				{VirtualizedRow}
+			</List>
 		</div>
-	);
+	)
 }
 
-function ProductCell({ columnIndex, rowIndex, style, data }) {
-	const { products, columns } = data;
-	const index = rowIndex * columns + columnIndex;
-	if (index >= products.length) return null;
+function VirtualizedRow({ index, style, data }) {
+	const { products, columns, gap } = data
+	const children = []
+
+	for (let column = 0; column < columns; column += 1) {
+		const productIndex = index * columns + column
+		if (productIndex >= products.length) break
+		const product = products[productIndex]
+		children.push(
+			<div key={product?._id || productIndex} style={{ flex: 1, minWidth: 0 }}>
+				<ProductCard product={product} />
+			</div>
+		)
+	}
+
 	return (
-		<div style={{ ...style, padding: 12 }}>
-			<ProductCard product={products[index]} />
+		<div style={{ ...style, display: 'flex', gap, padding: '0 12px' }}>
+			{children}
 		</div>
-	);
+	)
 }
 }

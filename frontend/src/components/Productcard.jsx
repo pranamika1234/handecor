@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
+import LazyImage from './LazyImage'
 
 
 export default function ProductCard({ product }) {
@@ -7,7 +8,11 @@ export default function ProductCard({ product }) {
 	return (
 		<div className="border rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow">
 			<Link to={`/product/${product._id}`}>
-				<img src={product.image || '/placeholder.jpg'} alt={product.name} className="w-full h-56 object-cover" loading="lazy" />
+				<LazyImage
+					src={product.image || '/placeholder.jpg'}
+					alt={product.name}
+					className="w-full h-56 object-cover"
+				/>
 			</Link>
 			<div className="p-4">
 				<h3 className="font-semibold text-gray-900">{product.name}</h3>
