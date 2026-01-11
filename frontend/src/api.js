@@ -7,8 +7,8 @@ headers: { 'Content-Type': 'application/json' }
 })
 
 
-export const fetchProducts = () => API.get('/products')
-export const fetchProduct = (id) => API.get(`/products/${id}`)
+export const fetchProducts = (config = {}) => API.get('/products', config)
+export const fetchProduct = (id, config = {}) => API.get(`/products/${id}`, config)
 
 
 export default API
