@@ -2,47 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { List } from "react-window";
 import { fetchProducts } from "../api";
 import ProductCard from "../components/Productcard";
-import fallbackProducts from "../data/fallbackProducts.json";
+import SourceBadge from "../components/SourceBadge";
+import {
+  SOURCE_LABELS,
+  getFallbackProducts,
+  readCachedProducts,
+  writeCachedProducts,
+} from "../utils/productCatalog";
 
-const CACHE_KEY = "handecor.products.cache";
-const CACHE_TTL = 1000 * 60 * 10; // 10 minutes
-const SOURCE_LABELS = {
-  live: "Live inventory",
-  cache: "Quick cache",
-  fallback: "Offline catalog",
-};
-
-function readCachedProducts() {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    const hasData = Array.isArray(parsed?.data) && parsed.data.length > 0;
-    const isFresh =
-      parsed?.timestamp && Date.now() - parsed.timestamp < CACHE_TTL;
-    if (hasData && isFresh) return parsed;
-    window.localStorage.removeItem(CACHE_KEY);
-    return null;
-  } catch (error) {
-    console.warn("Unable to read product cache", error);
-    return null;
-  }
-}
-
-function writeCachedProducts(data, timestamp = Date.now()) {
-  if (
-    typeof window === "undefined" ||
-    !Array.isArray(data) ||
-    data.length === 0
-  )
-    return;
-  try {
-    window.localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp }));
-  } catch (error) {
-    console.warn("Unable to persist product cache", error);
-  }
-}
+const fallbackCatalog = getFallbackProducts();
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
@@ -63,8 +31,8 @@ export default function Shop() {
         setProducts(cachedPayload.data);
         setDataSource("cache");
         setLastUpdated(cachedPayload.timestamp);
-      } else if (Array.isArray(fallbackProducts) && fallbackProducts.length) {
-        setProducts(fallbackProducts);
+      } else if (fallbackCatalog.length) {
+        setProducts(fallbackCatalog);
         setDataSource("fallback");
         setLastUpdated(null);
       }
@@ -293,20 +261,5 @@ function SkeletonGrid({ count = 8 }) {
         </div>
       ))}
     </div>
-  );
-}
-
-function SourceBadge({ status, label }) {
-  const dotColor =
-    status === "live"
-      ? "bg-green-500"
-      : status === "cache"
-        ? "bg-amber-500"
-        : "bg-gray-400";
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-gray-700">
-      <span className={`h-2 w-2 rounded-full ${dotColor}`} />
-      {label}
-    </span>
   );
 }
