@@ -16,11 +16,6 @@ export default function LazyImage({
 
 		const revealImage = () => setCurrentSrc(src || placeholder)
 
-		if ('loading' in HTMLImageElement.prototype) {
-			revealImage()
-			return
-		}
-
 		const observerSupported = typeof IntersectionObserver !== 'undefined'
 		if (!observerSupported) {
 			revealImage()
