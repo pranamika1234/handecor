@@ -6,6 +6,7 @@ import SourceBadge from "../components/SourceBadge";
 import {
 	SOURCE_LABELS,
 	getFallbackProducts,
+	normalizeProductMedia,
 	readCachedProducts,
 	writeCachedProducts,
 } from "../utils/productCatalog";
@@ -27,7 +28,7 @@ export default function Home() {
 		const hydrateFromLocal = () => {
 			const cachedPayload = readCachedProducts();
 			if (cachedPayload) {
-				setProducts(cachedPayload.data);
+				setProducts(normalizeProductMedia(cachedPayload.data));
 				setDataSource("cache");
 				setLastUpdated(cachedPayload.timestamp);
 				setLoading(false);
@@ -57,10 +58,12 @@ export default function Home() {
 					: [];
 				if (remoteProducts.length) {
 					const timestamp = Date.now();
-					setProducts(remoteProducts);
+					const normalizedProducts =
+						normalizeProductMedia(remoteProducts);
+					setProducts(normalizedProducts);
 					setDataSource("live");
 					setLastUpdated(timestamp);
-					writeCachedProducts(remoteProducts, timestamp);
+					writeCachedProducts(normalizedProducts, timestamp);
 					setErrorMessage("");
 				}
 			} catch (error) {

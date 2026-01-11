@@ -9,6 +9,36 @@ export const SOURCE_LABELS = {
   fallback: "Offline catalog",
 };
 
+const BASE_PATH =
+  typeof import.meta !== "undefined" && import.meta.env?.BASE_URL
+    ? import.meta.env.BASE_URL
+    : "/";
+
+function resolveAssetPath(path) {
+  if (!path) return path;
+  if (/^(?:https?:)?\/\//i.test(path) || path.startsWith("data:")) {
+    return path;
+  }
+  const trimmed = path.startsWith("/") ? path.slice(1) : path;
+  return `${BASE_PATH}${trimmed}`;
+}
+
+export function normalizeProductMedia(products = []) {
+  if (!Array.isArray(products)) return [];
+  return products.map((product = {}) => {
+    const imageSource =
+      product.image ??
+      product.thumbnail ??
+      product.photo ??
+      product.img ??
+      "";
+    return {
+      ...product,
+      image: resolveAssetPath(imageSource),
+    };
+  });
+}
+
 export function readCachedProducts() {
   if (typeof window === "undefined") return null;
   try {
@@ -46,5 +76,7 @@ export function writeCachedProducts(data, timestamp = Date.now()) {
 }
 
 export function getFallbackProducts() {
-  return Array.isArray(fallbackProducts) ? fallbackProducts : [];
+  return normalizeProductMedia(
+    Array.isArray(fallbackProducts) ? [...fallbackProducts] : [],
+  );
 }
