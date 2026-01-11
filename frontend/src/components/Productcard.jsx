@@ -9,7 +9,7 @@ export default function ProductCard({ product }) {
 		<div className="border rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow">
 			<Link to={`/product/${product._id}`}>
 				<LazyImage
-					src={product.image || '/placeholder.jpg'}
+					src={product.image}
 					alt={product.name}
 					className="w-full h-56 object-cover"
 				/>

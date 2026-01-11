@@ -1,20 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { PLACEHOLDER_IMAGE, resolveAssetPath } from '../utils/productCatalog'
 
 export default function LazyImage({
 	src,
 	alt,
 	className,
-	placeholder = '/placeholder.jpg',
+	placeholder = PLACEHOLDER_IMAGE,
 	...rest
 }) {
 	const imgRef = useRef(null)
-	const [currentSrc, setCurrentSrc] = useState(placeholder)
+	const normalizedPlaceholder = resolveAssetPath(placeholder) || PLACEHOLDER_IMAGE
+	const normalizedSrc = src ? resolveAssetPath(src) : normalizedPlaceholder
+	const [currentSrc, setCurrentSrc] = useState(normalizedPlaceholder)
 
 	useEffect(() => {
 		const node = imgRef.current
 		if (!node) return
 
-		const revealImage = () => setCurrentSrc(src || placeholder)
+		const revealImage = () => setCurrentSrc(normalizedSrc)
 
 		const observerSupported = typeof IntersectionObserver !== 'undefined'
 		if (!observerSupported) {
@@ -36,7 +39,7 @@ export default function LazyImage({
 
 		observer.observe(node)
 		return () => observer.disconnect()
-	}, [src, placeholder])
+	}, [normalizedSrc])
 
 	return (
 		<img

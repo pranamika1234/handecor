@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useOutletContext } from 'react-router-dom'
 import { fetchProduct } from '../api'
+import {
+	PLACEHOLDER_IMAGE,
+	getFallbackProducts,
+	normalizeProductMedia,
+} from '../utils/productCatalog'
 
 
 export default function Product() {
@@ -11,19 +16,42 @@ export default function Product() {
 
 
 useEffect(() => {
-fetchProduct(id)
-.then(res => setProduct(res.data))
-.catch(err => console.error(err))
+	let cancelled = false
+	const controller = new AbortController()
+
+	const hydrateFallback = () => {
+		const fallbackMatch = getFallbackProducts().find(item => item._id === id)
+		if (fallbackMatch) {
+			setProduct(fallbackMatch)
+		}
+	}
+
+	fetchProduct(id, { signal: controller.signal, timeout: 10000 })
+		.then(res => {
+			if (cancelled) return
+			const [normalized] = normalizeProductMedia([res.data])
+			setProduct(normalized || null)
+		})
+		.catch(err => {
+			if (cancelled || err?.code === 'ERR_CANCELED') return
+			console.error('Unable to load product', err)
+			hydrateFallback()
+		})
+
+	return () => {
+		cancelled = true
+		controller.abort()
+	}
 }, [id])
 
 
-if (!product) return <div className="text-center py-12">Loading…</div>
+if (!product) return <div className="text-center py-12">Loading...</div>
 
 
 return (
 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 <div>
-<img src={product.image || '/placeholder.jpg'} alt={product.name} className="w-full h-[480px] object-cover rounded-lg border" />
+<img src={product.image || PLACEHOLDER_IMAGE} alt={product.name} className="w-full h-[480px] object-cover rounded-lg border" />
 </div>
 <div>
 <h1 className="text-3xl font-bold mb-2 text-gray-900">{product.name}</h1>

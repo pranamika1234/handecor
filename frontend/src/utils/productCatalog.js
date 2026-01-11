@@ -14,8 +14,8 @@ const BASE_PATH =
     ? import.meta.env.BASE_URL
     : "/";
 
-function resolveAssetPath(path) {
-  if (!path) return path;
+export function resolveAssetPath(path = "") {
+  if (!path) return "";
   if (/^(?:https?:)?\/\//i.test(path) || path.startsWith("data:")) {
     return path;
   }
@@ -23,18 +23,24 @@ function resolveAssetPath(path) {
   return `${BASE_PATH}${trimmed}`;
 }
 
+export const PLACEHOLDER_IMAGE = resolveAssetPath("placeholder.jpg");
+
 export function normalizeProductMedia(products = []) {
   if (!Array.isArray(products)) return [];
   return products.map((product = {}) => {
     const imageSource =
       product.image ??
+      (Array.isArray(product.images) && product.images.length
+        ? product.images[0]
+        : undefined) ??
       product.thumbnail ??
       product.photo ??
       product.img ??
       "";
+    const resolvedImage = resolveAssetPath(imageSource) || PLACEHOLDER_IMAGE;
     return {
       ...product,
-      image: resolveAssetPath(imageSource),
+      image: resolvedImage,
     };
   });
 }
