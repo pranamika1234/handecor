@@ -1,0 +1,122 @@
+[
+  {
+    "_id": "offline-wooden-coasters",
+    "name": "Neem Wood Coaster Set",
+    "price": 699,
+    "image": "/wooden-coasters.jfif",
+    "shortDescription": "Hand-carved neem wood coasters finished with natural oils.",
+    "category": "Home Decor",
+    "stock": 18,
+    "seller": "EarthCraft"
+  },
+  {
+    "_id": "offline-bamboo-planter",
+    "name": "Bamboo Desktop Planter",
+    "price": 899,
+    "image": "/bamboo.webp",
+    "shortDescription": "Compact planter woven from treated bamboo strips.",
+    "category": "Home Decor",
+    "stock": 22,
+    "seller": "Studio Leaf"
+  },
+  {
+    "_id": "offline-macrame-wall",
+    "name": "Macramé Wall Hanging",
+    "price": 1499,
+    "image": "/macrame-wallhanging.webp",
+    "shortDescription": "Ivory cotton macramé with hand-dyed tassels.",
+    "category": "Wall Art",
+    "stock": 10,
+    "seller": "Knots & Looms"
+  },
+  {
+    "_id": "offline-dreamcatcher",
+    "name": "Boho Dreamcatcher",
+    "price": 1299,
+    "image": "/handmade-dreamcatcher.jpg",
+    "shortDescription": "Feather-detailed dreamcatcher in earthy tones.",
+    "category": "Wall Art",
+    "stock": 14,
+    "seller": "Sky Thread"
+  },
+  {
+    "_id": "offline-ceramic-vase",
+    "name": "Handprinted Ceramic Vase",
+    "price": 1899,
+    "image": "/handprinted-ceramic-vase.jpg",
+    "shortDescription": "Stoneware vase with indigo botanical prints.",
+    "category": "Ceramics",
+    "stock": 11,
+    "seller": "Mud & Bloom"
+  },
+  {
+    "_id": "offline-jute-bag",
+    "name": "Jute Market Tote",
+    "price": 999,
+    "image": "/collection_bags.jfif",
+    "shortDescription": "Reinforced jute tote lined with handloom cotton.",
+    "category": "Accessories",
+    "stock": 27,
+    "seller": "Coastal Weaves"
+  },
+  {
+    "_id": "offline-crochet-throw",
+    "name": "Crochet Throw Blanket",
+    "price": 2499,
+    "image": "/crochet-throw-blanket.jpeg",
+    "shortDescription": "Chunky cotton throw stitched in pastel gradients.",
+    "category": "Home Textiles",
+    "stock": 8,
+    "seller": "Loops Studio"
+  },
+  {
+    "_id": "offline-leather-journal",
+    "name": "Leather Travel Journal",
+    "price": 1399,
+    "image": "/leather-journal.webp",
+    "shortDescription": "Vegetable-tanned leather journal with recycled paper.",
+    "category": "Stationery",
+    "stock": 35,
+    "seller": "Nomad Press"
+  },
+  {
+    "_id": "offline-beaded-set",
+    "name": "Beaded Jewellery Set",
+    "price": 1599,
+    "image": "/beaded-jewellery-set.avif",
+    "shortDescription": "Hand-strung glass bead necklace with matching earrings.",
+    "category": "Jewellery",
+    "stock": 16,
+    "seller": "Aari Studio"
+  },
+  {
+    "_id": "offline-candle-trio",
+    "name": "Botanical Candle Trio",
+    "price": 1199,
+    "image": "/handmade-candleset.webp",
+    "shortDescription": "Soy candles infused with lavender, basil, and citrus.",
+    "category": "Home Fragrance",
+    "stock": 20,
+    "seller": "Lightwell"
+  },
+  {
+    "_id": "offline-soap-kit",
+    "name": "Artisan Soap Collection",
+    "price": 1299,
+    "image": "/handmade-soap-collection.webp",
+    "shortDescription": "Cold-process soaps with shea butter and floral infusions.",
+    "category": "Bath & Body",
+    "stock": 25,
+    "seller": "Bloom & Lather"
+  },
+  {
+    "_id": "offline-brass-inlay",
+    "name": "Brass Inlay Keepsake Box",
+    "price": 2199,
+    "image": "/wooden-jewellery-box.webp",
+    "shortDescription": "Sheesham wood box detailed with brass lattice work.",
+    "category": "Collectibles",
+    "stock": 9,
+    "seller": "Heritage Hands"
+  }
+]

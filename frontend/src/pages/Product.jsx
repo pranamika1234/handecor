@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useOutletContext } from 'react-router-dom'
 import { fetchProduct } from '../api'
+import {
+	PLACEHOLDER_IMAGE,
+	getFallbackProducts,
+	normalizeProductMedia,
+} from '../utils/productCatalog'
 
 
 export default function Product() {
@@ -11,13 +16,36 @@ export default function Product() {
 
 
 useEffect(() => {
-fetchProduct(id)
-.then(res => setProduct(res.data))
-.catch(err => console.error(err))
+	let cancelled = false
+	const controller = new AbortController()
+
+	const hydrateFallback = () => {
+		const fallbackMatch = getFallbackProducts().find(item => item._id === id)
+		if (fallbackMatch) {
+			setProduct(fallbackMatch)
+		}
+	}
+
+	fetchProduct(id, { signal: controller.signal, timeout: 10000 })
+		.then(res => {
+			if (cancelled) return
+			const [normalized] = normalizeProductMedia([res.data])
+			setProduct(normalized || null)
+		})
+		.catch(err => {
+			if (cancelled || err?.code === 'ERR_CANCELED') return
+			console.error('Unable to load product', err)
+			hydrateFallback()
+		})
+
+	return () => {
+		cancelled = true
+		controller.abort()
+	}
 }, [id])
 
 
-if (!product) return <div className="text-center py-12">Loading…</div>
+if (!product) return <div className="text-center py-12">Loading...</div>
 
 const imgSrc = product?.image
 	? `${import.meta.env.BASE_URL}${product.image.replace(/^\/+/g, '')}`
