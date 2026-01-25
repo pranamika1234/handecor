@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { List } from "react-window";
+import { FixedSizeList as List } from "react-window";
 import { fetchProducts } from "../api";
 import ProductCard from "../components/Productcard";
 import SourceBadge from "../components/SourceBadge";

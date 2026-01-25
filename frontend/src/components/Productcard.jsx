@@ -1,10 +1,5 @@
 import React from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
-import LazyImage from './LazyImage'
-
-
-import React from 'react'
-import { Link, useOutletContext } from 'react-router-dom'
 
 
 export default function ProductCard({ product }) {
