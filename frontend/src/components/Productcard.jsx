@@ -6,8 +6,16 @@ export default function ProductCard({ product }) {
 	const { addToCart } = useOutletContext() || {};
 
 	const imgSrc = product?.image
-		? `${import.meta.env.BASE_URL}${product.image.replace(/^\/+/, '')}`
-		: `${import.meta.env.BASE_URL}placeholder.jpg`;
+		? (() => {
+			const src = product.image;
+			const base = import.meta.env.BASE_URL || '/';
+			if (!src) return `${base}placeholder.jpg`;
+			if (/^https?:\/\//.test(src) || src.startsWith('//')) return src;
+			if (src.startsWith(base)) return src;
+			if (src.startsWith('/')) return `${base}${src.replace(/^\/+/, '')}`;
+			return `${base}${src}`;
+		})()
+		: `${import.meta.env.BASE_URL || '/'}placeholder.jpg`;
 	return (
 		<div className="border rounded-lg overflow-hidden shadow-sm bg-white hover:shadow-md transition-shadow">
 			<Link to={`/product/${product._id}`}>

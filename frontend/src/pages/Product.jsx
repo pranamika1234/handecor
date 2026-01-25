@@ -48,8 +48,16 @@ useEffect(() => {
 if (!product) return <div className="text-center py-12">Loading...</div>
 
 const imgSrc = product?.image
-	? `${import.meta.env.BASE_URL}${product.image.replace(/^\/+/g, '')}`
-	: `${import.meta.env.BASE_URL}placeholder.jpg`;
+	? (() => {
+		const src = product.image;
+		const base = import.meta.env.BASE_URL || '/';
+		if (!src) return `${base}placeholder.jpg`;
+		if (/^https?:\/\//.test(src) || src.startsWith('//')) return src;
+		if (src.startsWith(base)) return src;
+		if (src.startsWith('/')) return `${base}${src.replace(/^\/+/, '')}`;
+		return `${base}${src}`;
+	})()
+	: `${import.meta.env.BASE_URL || '/'}placeholder.jpg`;
 
 return (
 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
