@@ -19,11 +19,14 @@ fetchProduct(id)
 
 if (!product) return <div className="text-center py-12">Loading…</div>
 
+const imgSrc = product?.image
+	? `${import.meta.env.BASE_URL}${product.image.replace(/^\/+/g, '')}`
+	: `${import.meta.env.BASE_URL}placeholder.jpg`;
 
 return (
 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 <div>
-<img src={product.image || '/placeholder.jpg'} alt={product.name} className="w-full h-[480px] object-cover rounded-lg border" />
+<img src={imgSrc} alt={product.name} className="w-full h-[480px] object-cover rounded-lg border" />
 </div>
 <div>
 <h1 className="text-3xl font-bold mb-2 text-gray-900">{product.name}</h1>
