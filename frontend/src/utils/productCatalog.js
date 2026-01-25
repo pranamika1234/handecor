@@ -13,14 +13,27 @@ const BASE_PATH =
   typeof import.meta !== "undefined" && import.meta.env?.BASE_URL
     ? import.meta.env.BASE_URL
     : "/";
+const NORMALIZED_BASE =
+  BASE_PATH === "/"
+    ? "/"
+    : BASE_PATH.endsWith("/")
+      ? BASE_PATH
+      : `${BASE_PATH}/`;
 
 export function resolveAssetPath(path = "") {
   if (!path) return "";
   if (/^(?:https?:)?\/\//i.test(path) || path.startsWith("data:")) {
     return path;
   }
-  const trimmed = path.startsWith("/") ? path.slice(1) : path;
-  return `${BASE_PATH}${trimmed}`;
+  if (path.startsWith(NORMALIZED_BASE)) {
+    return path;
+  }
+  if (path.startsWith("/")) {
+    if (NORMALIZED_BASE === "/") return path;
+    const trimmed = path.replace(/^\/+/, "");
+    return `${NORMALIZED_BASE}${trimmed}`;
+  }
+  return `${NORMALIZED_BASE}${path}`;
 }
 
 export const PLACEHOLDER_IMAGE = resolveAssetPath("placeholder.jpg");
