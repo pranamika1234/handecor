@@ -19,21 +19,34 @@ const NORMALIZED_BASE =
     : BASE_PATH.endsWith("/")
       ? BASE_PATH
       : `${BASE_PATH}/`;
+const BASE_SEGMENT =
+  NORMALIZED_BASE === "/"
+    ? ""
+    : NORMALIZED_BASE.replace(/^\/+|\/+$/g, "");
 
 export function resolveAssetPath(path = "") {
   if (!path) return "";
   if (/^(?:https?:)?\/\//i.test(path) || path.startsWith("data:")) {
     return path;
   }
-  if (path.startsWith(NORMALIZED_BASE)) {
-    return path;
+  if (NORMALIZED_BASE === "/") {
+    const trimmed = path.startsWith("/") ? path : `/${path}`;
+    return trimmed.replace(/\/+/g, "/");
   }
-  if (path.startsWith("/")) {
-    if (NORMALIZED_BASE === "/") return path;
-    const trimmed = path.replace(/^\/+/, "");
-    return `${NORMALIZED_BASE}${trimmed}`;
+
+  let working = path.replace(/^\/+/, "");
+
+  const normalizedSegment = BASE_SEGMENT ? `${BASE_SEGMENT}/` : "";
+  if (normalizedSegment) {
+    while (working.startsWith(normalizedSegment)) {
+      working = working.slice(normalizedSegment.length);
+    }
+    if (working === BASE_SEGMENT) {
+      working = "";
+    }
   }
-  return `${NORMALIZED_BASE}${path}`;
+
+  return `${NORMALIZED_BASE}${working}`;
 }
 
 export const PLACEHOLDER_IMAGE = resolveAssetPath("placeholder.jpg");
